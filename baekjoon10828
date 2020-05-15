@@ -1,0 +1,69 @@
+#include <iostream>
+
+using namespace std;
+
+typedef struct node {
+	int Data;
+	node* Next;
+};
+typedef node* Nptr;
+
+class stackClass {
+	Nptr Top;
+public:
+	stackClass() { Top = NULL; } // stackClass 생성시 Top 초기값 NULL
+	~stackClass() { // stackClass 소멸시
+		int Temp;
+		while (!IsEmpty()) Temp = Pop(); // 내용이 없을 때까지 Pop, 단 출력은 안함
+	}
+	void Push(int Item) { // Push 기능, 정수를 스택에 넣는 연산
+		Nptr NewTop = new node; // 새로운 공간을 하나 만들어서
+		NewTop->Data = Item; // 값을 넣음
+		if (Top == NULL) { NewTop->Next = NULL; } // 스택이 비어있는 경우
+		else { NewTop->Next = Top; } // 스택이 비어있지 않은 경우
+		Top = NewTop; // Top은 가장 늦게 들어온 값을 가리킴
+	}
+	int Pop() { // Pop 기능, 가장 위에 있는 정수를 빼냄
+		if (IsEmpty()) return -1;
+		else { // 스택이 비어있지 않은 경우 실행
+			Nptr Temp = Top; // 가장 위에 있는 공간을 가리킴
+			int Item = Temp->Data; // 해당 공간의 값을 할당
+			Top = Top->Next; // 해당 공간 다음의 공간을 가리키게 함
+			delete Temp; // 가장 위에 있는 공간 삭제
+			return Item; // 맨 위에 있던 값을 출력
+		}
+	}
+	int size() { // 스택에 있는 정수 개수 출력
+		Nptr Temp = Top; // 맨 위에 있는 공간을 가리킴
+		int s; // 개수를 출력할 변수
+		if (Temp == NULL) return 0;
+		for (s = 0; Temp->Next != NULL; s++) {
+			Temp = Temp->Next; // NULL을 가리킬 때까지 실행
+		}
+		return s + 1; // 정수의 개수를 리턴
+	}
+	bool IsEmpty() { return (Top == NULL); }
+	int top() { 
+		if (IsEmpty()) return -1;
+		return Top->Data; // Top이 가리키는 공간의 정수를 리턴
+	} 
+};
+
+int main() {
+	stackClass S; // 클래스 선언
+	int N, INT = 0; // N : 명령어 수, INT : 저장할 정수
+	string com; // com : 명령어
+
+	cin >> N; // 명령어 개수 입력
+	for (int i = 0; i < N; i++) {
+		cin >> com; // 명령어 입력
+		if (com == "push") { // push인 경우
+			cin >> INT; // 정수 입력
+		}
+		if (com == "push") { S.Push(INT); } // push을 입력한 경우
+		else if (com == "pop") { cout << S.Pop() << '\n'; } // pop을 입력한 경우
+		else if (com == "size") { cout << S.size() << '\n'; } // size를 입력한 경우
+		else if (com == "empty") { cout << S.IsEmpty() << '\n'; } // empty를 입력한 경우
+		else if (com == "top") { cout << S.top() << '\n'; } // top을 입력한 경우
+	}
+}
